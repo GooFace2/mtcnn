@@ -1,6 +1,6 @@
 import mxnet as mx
 import numpy as np
-import minibatch
+from . import minibatch
 from config import config
 
 class TestLoader(mx.io.DataIter):

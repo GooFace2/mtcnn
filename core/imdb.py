@@ -1,6 +1,6 @@
 import mxnet as mx
 import os
-import cPickle
+import pickle
 import numpy as np
 from config import config
 

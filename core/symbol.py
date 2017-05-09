@@ -1,6 +1,7 @@
 import mxnet as mx
-import negativemining
+from . import negativemining
 from config import config
+
 
 def P_Net(mode='train'):
     """
