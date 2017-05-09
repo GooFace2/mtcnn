@@ -18,7 +18,7 @@ def train_net(sym, prefix, ctx, pretrained, epoch, begin_epoch, end_epoch, imdb,
         args, auxs = load_param(pretrained, epoch, convert=True)
 
     if initialize:
-        print "init weights and bias:"
+        print("init weights and bias:")
         data_shape_dict = dict(train_data.provide_data + train_data.provide_label)
         arg_shape, _, aux_shape = sym.infer_shape(**data_shape_dict)
         arg_shape_dict = dict(zip(sym.list_arguments(), arg_shape))
@@ -31,7 +31,7 @@ def train_net(sym, prefix, ctx, pretrained, epoch, begin_epoch, end_epoch, imdb,
             if k in data_shape_dict:
                 continue
 
-            print 'init', k
+            print('init', k)
 
             args[k] = mx.nd.zeros(arg_shape_dict[k])
             init(k, args[k])
@@ -57,7 +57,7 @@ def train_net(sym, prefix, ctx, pretrained, epoch, begin_epoch, end_epoch, imdb,
     lr_epoch_diff = [epoch - begin_epoch for epoch in lr_epoch if epoch > begin_epoch]
     lr = base_lr * (lr_factor ** (len(lr_epoch) - len(lr_epoch_diff)))
     lr_iters = [int(epoch * len(imdb) / config.BATCH_SIZE) for epoch in lr_epoch_diff]
-    print 'lr', lr, 'lr_epoch', lr_epoch, 'lr_epoch_diff', lr_epoch_diff
+    print('lr', lr, 'lr_epoch', lr_epoch, 'lr_epoch_diff', lr_epoch_diff)
     lr_scheduler = mx.lr_scheduler.MultiFactorScheduler(lr_iters, lr_factor)
 
     data_names = [k[0] for k in train_data.provide_data]

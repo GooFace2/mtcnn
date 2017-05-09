@@ -249,7 +249,7 @@ class MtcnnDetector(object):
             batch_size = self.pnet_detector.batch_size
             ratio = float(num_boxes) / batch_size
             if ratio > 3 or ratio < 0.3:
-                print "You may need to reset PNet batch size if this info appears frequently, \
+                print("You may need to reset PNet batch size if this info appears frequently, \)
 face candidates:%d, current batch_size:%d"%(num_boxes, batch_size)
             '''
             all_cropped_ims = np.vstack(all_cropped_ims)
@@ -342,7 +342,7 @@ face candidates:%d, current batch_size:%d"%(num_boxes, batch_size)
         batch_size = self.rnet_detector.batch_size
         ratio = float(num_boxes) / batch_size
         if ratio > 3 or ratio < 0.3:
-            print "You may need to reset RNet batch size if this info appears frequently, \
+            print("You may need to reset RNet batch size if this info appears frequently, \)
 face candidates:%d, current batch_size:%d"%(num_boxes, batch_size)
         '''
 
@@ -399,7 +399,7 @@ face candidates:%d, current batch_size:%d"%(num_boxes, batch_size)
         batch_size = self.onet_detector.batch_size
         ratio = float(num_boxes) / batch_size
         if ratio > 3 or ratio < 0.3:
-            print "You may need to reset ONet batch size if this info appears frequently, \
+            print("You may need to reset ONet batch size if this info appears frequently, \)
 face candidates:%d, current batch_size:%d"%(num_boxes, batch_size)
         '''
 
@@ -447,7 +447,7 @@ face candidates:%d, current batch_size:%d"%(num_boxes, batch_size)
         batch_idx = 0
         for databatch in test_data:
             if batch_idx % 100 == 0:
-                print "%d images done"%batch_idx
+                print("%d images done"%batch_idx)
             im = databatch.data[0].asnumpy().astype(np.uint8)
             t = time.time()
 
@@ -491,7 +491,7 @@ face candidates:%d, current batch_size:%d"%(num_boxes, batch_size)
 
                 t3 = time.time() - t
                 t = time.time()
-                print "time cost " + '{:.3f}'.format(t1+t2+t3) + '  pnet {:.3f}  rnet {:.3f}  onet {:.3f}'.format(t1, t2, t3)
+                print("time cost " + '{:.3f}'.format(t1+t2+t3) + '  pnet {:.3f}  rnet {:.3f}  onet {:.3f}'.format(t1, t2, t3))
 
             all_boxes.append(boxes_c)
             batch_idx += 1

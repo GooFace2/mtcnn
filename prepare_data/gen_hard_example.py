@@ -35,7 +35,7 @@ def save_hard_example(net):
     im_idx_list = list()
     gt_boxes_list = list()
     num_of_images = len(annotations)
-    print "processing %d images in total"%num_of_images
+    print("processing %d images in total"%num_of_images)
 
     for annotation in annotations:
         annotation = annotation.strip().split(' ')
@@ -61,7 +61,7 @@ def save_hard_example(net):
     image_done = 0
     for im_idx, dets, gts in zip(im_idx_list, det_boxes, gt_boxes_list):
         if image_done % 100 == 0:
-            print "%d images done"%image_done
+            print("%d images done"%image_done)
         image_done += 1
 
         if dets.shape[0]==0:
@@ -205,8 +205,8 @@ def parse_args():
 
 if __name__ == '__main__':
     args = parse_args()
-    print 'Called with argument:'
-    print args
+    print('Called with argument:')
+    print(args)
     ctx = mx.gpu(args.gpu_id)
     if args.gpu_id == -1:
         ctx = mx.cpu(0)

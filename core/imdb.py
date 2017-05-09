@@ -66,7 +66,7 @@ class IMDB(object):
         if os.path.exists(cache_file):
             with open(cache_file, 'rb') as f:
                 imdb = cPickle.load(f)
-            print '{} gt imdb loaded from {}'.format(self.name, cache_file)
+            print('{} gt imdb loaded from {}'.format(self.name, cache_file))
             return imdb
         gt_imdb = self.load_annotations()
         with open(cache_file, 'wb') as f:
@@ -145,7 +145,7 @@ class IMDB(object):
         imdb: dict
             image database with flipped image annotations added
         """
-        print 'append flipped images to imdb', len(imdb)
+        print('append flipped images to imdb', len(imdb))
         for i in range(len(imdb)):
             imdb_ = imdb[i]
             m_bbox = imdb_['bbox_target'].copy()
@@ -170,7 +170,7 @@ class IMDB(object):
         Returns:
         -------
         """
-        print 'Writing fddb results'
+        print('Writing fddb results')
         res_folder = os.path.join(self.cache_path, 'results')
         if not os.path.exists(res_folder):
             os.makedirs(res_folder)

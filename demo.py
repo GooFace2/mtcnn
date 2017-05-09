@@ -47,7 +47,7 @@ def test_net(prefix, epoch, batch_size, ctx,
     boxes, boxes_c = mtcnn_detector.detect_rnet(img, boxes_c)
     boxes, boxes_c = mtcnn_detector.detect_onet(img, boxes_c)
 
-    print 'time: ',time.time() - t1
+    print('time: ',time.time() - t1)
 
     if boxes_c is not None:
         draw = img.copy()
@@ -84,8 +84,8 @@ def parse_args():
 
 if __name__ == '__main__':
     args = parse_args()
-    print 'Called with argument:'
-    print args
+    print('Called with argument:')
+    print(args)
     ctx = mx.gpu(args.gpu_id)
     if args.gpu_id == -1:
         ctx = mx.cpu(0)

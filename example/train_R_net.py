@@ -46,8 +46,8 @@ def parse_args():
 
 if __name__ == '__main__':
     args = parse_args()
-    print 'Called with argument:'
-    print args
+    print('Called with argument:')
+    print(args)
     ctx = [mx.gpu(int(i)) for i in args.gpu_ids.split(',')]
     train_R_net(args.image_set, args.root_path, args.dataset_path, args.prefix,
                 ctx, args.pretrained, args.epoch, args.begin_epoch,

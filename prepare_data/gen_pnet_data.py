@@ -21,7 +21,7 @@ with open(anno_file, 'r') as f:
     annotations = f.readlines()
 
 num = len(annotations)
-print "%d pics in total" % num
+print("%d pics in total" % num)
 p_idx = 0 # positive
 n_idx = 0 # negative
 d_idx = 0 # dont care
@@ -35,7 +35,7 @@ for annotation in annotations:
     img = cv2.imread(os.path.join(im_dir, im_path + '.jpg'))
     idx += 1
     if idx % 100 == 0:
-        print idx, "images done"
+        print(idx, "images done")
 
     height, width, channel = img.shape
 
@@ -131,7 +131,7 @@ for annotation in annotations:
                 cv2.imwrite(save_file, resized_im)
                 d_idx += 1
         box_idx += 1
-        print "%s images done, pos: %s part: %s neg: %s"%(idx, p_idx, d_idx, n_idx)
+        print("%s images done, pos: %s part: %s neg: %s"%(idx, p_idx, d_idx, n_idx))
 
 f1.close()
 f2.close()
