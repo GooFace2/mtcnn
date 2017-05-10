@@ -19,7 +19,7 @@ from tools.load_model import load_param
 from core.MtcnnDetector import MtcnnDetector
 
 
-def test_net(prefix, epoch, batch_size=[2048, 256, 16], ctx=mx.cpu(0),
+def test_net(prefix=['model/pnet', 'model/rnet', 'model/onet'], epoch=[16, 16, 16], batch_size=[2048, 256, 16], ctx=mx.cpu(0),
              thresh=[0.6, 0.6, 0.7], min_face_size=24,
              stride=2, camera_path='0'):
 
@@ -43,10 +43,18 @@ def test_net(prefix, epoch, batch_size=[2048, 256, 16], ctx=mx.cpu(0),
     except ValueError as e:
         capture = cv2.VideoCapture(camera_path)
 
+    first_loop = True
     while (capture.isOpened()):
         ret, img = capture.read()
         if img is None:
             continue
+
+        # Initialize video writing
+        if (first_loop):
+            first_loop = False
+            fourcc = cv2.VideoWriter_fourcc(*'H264')
+            h, w = frames[0].shape[:2]
+            writer = cv2.VideoWriter('test.mkv', fourcc, 30, (w, h), True)
 
         t1 = time.time()
 
@@ -64,6 +72,7 @@ def test_net(prefix, epoch, batch_size=[2048, 256, 16], ctx=mx.cpu(0),
                 cv2.putText(draw, '%.3f' % b[4], (int(b[0]), int(b[1])), font, 0.4, (255, 255, 255), 1)
 
         cv2.imshow("detection result", draw)
+        writer.write(draw)
 
         k = cv2.waitKey(1)
         if k == 27 or k == 113:  # Esc or q key to stop
