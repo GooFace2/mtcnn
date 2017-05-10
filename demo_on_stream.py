@@ -52,7 +52,7 @@ def test_net(prefix, epoch, batch_size, ctx,
         boxes, boxes_c = mtcnn_detector.detect_rnet(img, boxes_c)
         boxes, boxes_c = mtcnn_detector.detect_onet(img, boxes_c)
 
-        print('time: ', time.time() - t1)
+        print('shape: ', img.shape, '--', 'time: ', time.time() - t1)
 
         if boxes_c is not None:
             draw = img.copy()
@@ -65,7 +65,9 @@ def test_net(prefix, epoch, batch_size, ctx,
         else:
             cv2.imshow("detection result", img)
 
-        cv2.waitKey(1)
+        k = cv2.waitKey(1)
+        if k == 27 or k == 113:  # Esc or q key to stop
+            break
 
 
 def parse_args():
