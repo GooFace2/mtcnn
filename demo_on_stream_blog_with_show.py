@@ -43,39 +43,42 @@ def test_net(prefix=['model/pnet', 'model/rnet', 'model/onet'], epoch=[16, 16, 1
     except ValueError as e:
         capture = cv2.VideoCapture(camera_path)
 
-    try:
-        first_loop = True
-        while (capture.isOpened()):
-            ret, img = capture.read()
-            if img is None:
-                continue
+    first_loop = True
+    while (capture.isOpened()):
+        ret, img = capture.read()
+        if img is None:
+            continue
 
-            # Initialize video writing
-            if (first_loop):
-                first_loop = False
-                fourcc = cv2.VideoWriter_fourcc(*'H264')
-                h, w = img.shape[:2]
-                writer = cv2.VideoWriter('test.mkv', fourcc, 30, (w, h), True)
+        # Initialize video writing
+        if (first_loop):
+            first_loop = False
+            fourcc = cv2.VideoWriter_fourcc(*'H264')
+            h, w = img.shape[:2]
+            writer = cv2.VideoWriter('test.mkv', fourcc, 30, (w, h), True)
 
-            t1 = time.time()
+        t1 = time.time()
 
-            boxes, boxes_c = mtcnn_detector.detect_pnet(img)
-            boxes, boxes_c = mtcnn_detector.detect_rnet(img, boxes_c)
-            boxes, boxes_c = mtcnn_detector.detect_onet(img, boxes_c)
+        boxes, boxes_c = mtcnn_detector.detect_pnet(img)
+        boxes, boxes_c = mtcnn_detector.detect_rnet(img, boxes_c)
+        boxes, boxes_c = mtcnn_detector.detect_onet(img, boxes_c)
 
-            print('shape: ', img.shape, '--', 'time: ', time.time() - t1)
+        print('shape: ', img.shape, '--', 'time: ', time.time() - t1)
 
-            draw = img.copy()
-            if boxes_c is not None:
-                font = cv2.FONT_HERSHEY_SIMPLEX
-                for b in boxes_c:
-                    cv2.rectangle(draw, (int(b[0]), int(b[1])), (int(b[2]), int(b[3])), (0, 255, 255), 1)
-                    cv2.putText(draw, '%.3f' % b[4], (int(b[0]), int(b[1])), font, 0.4, (255, 255, 255), 1)
+        draw = img.copy()
+        if boxes_c is not None:
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            for b in boxes_c:
+                cv2.rectangle(draw, (int(b[0]), int(b[1])), (int(b[2]), int(b[3])), (0, 255, 255), 1)
+                cv2.putText(draw, '%.3f' % b[4], (int(b[0]), int(b[1])), font, 0.4, (255, 255, 255), 1)
 
-            writer.write(draw)
+        cv2.imshow("detection result", draw)
+        writer.write(draw)
 
-    except Exception as e:
-        writer.realease()
+        k = cv2.waitKey(1)
+        if k == 27 or k == 113:  # Esc or q key to stop
+            writer.realease()
+            cv2.destroyAllWindows()
+            break
 
 
 def parse_args():
