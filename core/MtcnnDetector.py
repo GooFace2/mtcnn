@@ -7,6 +7,7 @@ import numpy as np
 from config import config
 from tools.nms import py_nms
 
+
 class MtcnnDetector(object):
     """
         Joint Face Detection and Alignment using Multi-task Cascaded Convolutional Neural Networks
@@ -26,12 +27,11 @@ class MtcnnDetector(object):
         self.rnet_detector = detectors[1]
         self.onet_detector = detectors[2]
         self.min_face_size = min_face_size
-        self.stride=stride
+        self.stride = stride
         self.thresh = threshold
         self.ctx = ctx
         self.scale_factor = scale_factor
         self.slide_window = slide_window
-
 
     def convert_to_square(self, bbox):
         """
@@ -48,7 +48,7 @@ class MtcnnDetector(object):
 
         h = bbox[:, 3] - bbox[:, 1] + 1
         w = bbox[:, 2] - bbox[:, 0] + 1
-        max_side = np.maximum(h,w)
+        max_side = np.maximum(h, w)
         square_bbox[:, 0] = bbox[:, 0] + w*0.5 - max_side*0.5
         square_bbox[:, 1] = bbox[:, 1] + h*0.5 - max_side*0.5
         square_bbox[:, 2] = square_bbox[:, 0] + max_side - 1
@@ -99,7 +99,7 @@ class MtcnnDetector(object):
         stride = 2
         cellsize = 12
 
-        t_index = np.where(map>threshold)
+        t_index = np.where(map > threshold)
 
         # find nothing
         if t_index[0].size == 0:
@@ -117,7 +117,6 @@ class MtcnnDetector(object):
                                  reg])
 
         return boundingbox.T
-
 
     def resize_image(self, img, scale):
         """
@@ -138,8 +137,7 @@ class MtcnnDetector(object):
         new_dim = (new_width, new_height)
         img_resized = cv2.resize(img, new_dim, interpolation=cv2.INTER_LINEAR)      # resized image
         img_resized = image_processing.transform(img_resized)
-        return img_resized # (batch_size, c, h, w)
-
+        return img_resized  # (batch_size, c, h, w)
 
     def pad(self, bboxes, w, h):
         """
@@ -168,8 +166,8 @@ class MtcnnDetector(object):
         tmpw, tmph = bboxes[:, 2] - bboxes[:, 0] + 1,  bboxes[:, 3] - bboxes[:, 1] + 1
         num_box = bboxes.shape[0]
 
-        dx , dy= np.zeros((num_box, )), np.zeros((num_box, ))
-        edx, edy  = tmpw.copy()-1, tmph.copy()-1
+        dx, dy = np.zeros((num_box, )), np.zeros((num_box, ))
+        edx, edy = tmpw.copy()-1, tmph.copy()-1
 
         x, y, ex, ey = bboxes[:, 0], bboxes[:, 1], bboxes[:, 2], bboxes[:, 3]
 
@@ -193,7 +191,6 @@ class MtcnnDetector(object):
         return_list = [item.astype(np.int32) for item in return_list]
 
         return return_list
-
 
     def detect_pnet(self, im):
         """Get face candidates through pnet
@@ -224,9 +221,9 @@ class MtcnnDetector(object):
             all_cropped_ims = list()
             while min(current_height, current_width) > net_size:
                 current_y_list = range(0, current_height - net_size + 1, self.stride) if (current_height - net_size) % self.stride == 0 \
-                else range(0, current_height - net_size + 1, self.stride) + [current_height - net_size]
+                    else range(0, current_height - net_size + 1, self.stride) + [current_height - net_size]
                 current_x_list = range(0, current_width - net_size + 1, self.stride) if (current_width - net_size) % self.stride == 0 \
-                else range(0, current_width - net_size + 1, self.stride) + [current_width - net_size]
+                    else range(0, current_width - net_size + 1, self.stride) + [current_width - net_size]
 
                 for current_y in current_y_list:
                     for current_x in current_x_list:
@@ -235,7 +232,7 @@ class MtcnnDetector(object):
                         current_rectangle = [int(w * float(current_x) / current_width), int(h * float(current_y) / current_height),
                                              int(w * float(current_x) / current_width) + int(w * float(net_size) / current_width),
                                              int(h * float(current_y) / current_height) + int(w * float(net_size) / current_width),
-                                                 0.0]
+                                             0.0]
                         temp_rectangles.append(current_rectangle)
                         all_cropped_ims.append(cropped_im)
 
@@ -264,7 +261,6 @@ face candidates:%d, current batch_size:%d"%(num_boxes, batch_size)
                 reg = reg[keep_inds].reshape(-1, 4)
             else:
                 return None, None
-
 
             keep = py_nms(boxes, 0.7, 'Union')
             boxes = boxes[keep]
@@ -330,6 +326,8 @@ face candidates:%d, current batch_size:%d"%(num_boxes, batch_size)
         boxes_c: numpy array
             boxes after calibration
         """
+        if dets is None:
+            return None, None
         h, w, c = im.shape
         dets = self.convert_to_square(dets)
         dets[:, 0:4] = np.round(dets[:, 0:4])
@@ -387,6 +385,8 @@ face candidates:%d, current batch_size:%d"%(num_boxes, batch_size)
         boxes_c: numpy array
             boxes after calibration
         """
+        if dets is None:
+            return None, None
         h, w, c = im.shape
         dets = self.convert_to_square(dets)
         dets[:, 0:4] = np.round(dets[:, 0:4])
@@ -427,7 +427,6 @@ face candidates:%d, current batch_size:%d"%(num_boxes, batch_size)
 
         return boxes, boxes_c
 
-
     def detect_face(self, imdb, test_data, vis):
         """Detect face over image
 
@@ -447,7 +446,7 @@ face candidates:%d, current batch_size:%d"%(num_boxes, batch_size)
         batch_idx = 0
         for databatch in test_data:
             if batch_idx % 100 == 0:
-                print("%d images done"%batch_idx)
+                print("%d images done" % batch_idx)
             im = databatch.data[0].asnumpy().astype(np.uint8)
             t = time.time()
 
@@ -498,7 +497,6 @@ face candidates:%d, current batch_size:%d"%(num_boxes, batch_size)
         # save detections into fddb format
 #        imdb.write_results(all_boxes)
         return all_boxes
-
 
     def vis_two(self, im_array, dets1, dets2, thresh=0.9):
         """Visualize detection results before and after calibration
