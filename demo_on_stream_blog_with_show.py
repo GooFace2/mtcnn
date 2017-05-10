@@ -76,7 +76,7 @@ def test_net(prefix=['model/pnet', 'model/rnet', 'model/onet'], epoch=[16, 16, 1
 
         k = cv2.waitKey(1)
         if k == 27 or k == 113:  # Esc or q key to stop
-            writer.realease()
+            writer.release()
             cv2.destroyAllWindows()
             break
 
@@ -114,4 +114,4 @@ if __name__ == '__main__':
         ctx = mx.cpu(0)
     test_net(args.prefix, args.epoch, args.batch_size,
              ctx, args.thresh, args.min_face,
-             args.stride, args.slide_window, camera_path=args.camera_path)
+             args.stride, camera_path=args.camera_path)

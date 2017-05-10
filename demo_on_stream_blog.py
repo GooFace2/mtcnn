@@ -74,8 +74,9 @@ def test_net(prefix=['model/pnet', 'model/rnet', 'model/onet'], epoch=[16, 16, 1
 
             writer.write(draw)
 
-    except Exception as e:
-        writer.realease()
+    except KeyboardInterrupt as e:
+        print("KeyboardInterrupt")
+        writer.release()
 
 
 def parse_args():
@@ -111,4 +112,4 @@ if __name__ == '__main__':
         ctx = mx.cpu(0)
     test_net(args.prefix, args.epoch, args.batch_size,
              ctx, args.thresh, args.min_face,
-             args.stride, args.slide_window, camera_path=args.camera_path)
+             args.stride, args.camera_path)
