@@ -54,7 +54,7 @@ def test_net(prefix=['model/pnet', 'model/rnet', 'model/onet'], epoch=[16, 16, 1
             first_loop = False
             fourcc = cv2.VideoWriter_fourcc(*'H264')
             h, w = img.shape[:2]
-            writer = cv2.VideoWriter('test.mkv', fourcc, 30, (w, h), True)
+            writer = cv2.VideoWriter('test.mkv', fourcc, 10, (w, h), True)
 
         t1 = time.time()
 
