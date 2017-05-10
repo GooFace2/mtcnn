@@ -49,11 +49,8 @@ def test_net(prefix, epoch, batch_size, ctx,
         t1 = time.time()
 
         boxes, boxes_c = mtcnn_detector.detect_pnet(img)
-        print("irboxe: ", boxes, "boxec:", boxes_c)
         boxes, boxes_c = mtcnn_detector.detect_rnet(img, boxes_c)
-        print("ioboxe: ", boxes, "boxec:", boxes_c)
         boxes, boxes_c = mtcnn_detector.detect_onet(img, boxes_c)
-        print("ooboxe: ", boxes, "boxec:", boxes_c)
 
         print('time: ', time.time() - t1)
 
@@ -65,7 +62,10 @@ def test_net(prefix, epoch, batch_size, ctx,
                 cv2.putText(draw, '%.3f' % b[4], (int(b[0]), int(b[1])), font, 0.4, (255, 255, 255), 1)
 
             cv2.imshow("detection result", draw)
-            cv2.waitKey(1)
+        else:
+            cv2.imshow("detection result", img)
+
+        cv2.waitKey(1)
 
 
 def parse_args():
