@@ -40,7 +40,11 @@ def test_net(prefix, epoch, batch_size, ctx,
     mtcnn_detector = MtcnnDetector(detectors=detectors, ctx=ctx, min_face_size=min_face_size,
                                    stride=stride, threshold=thresh, slide_window=slide_window)
 
-    capture = cv2.VideoCapture(int(camera_path))
+    try:
+        capture = cv2.VideoCapture(int(camera_path))
+    except ValueError as e:
+        capture = cv2.VideoCapture(camera_path)
+
     while (capture.isOpened()):
         ret, img = capture.read()
         if img is None:
@@ -103,4 +107,4 @@ if __name__ == '__main__':
         ctx = mx.cpu(0)
     test_net(args.prefix, args.epoch, args.batch_size,
              ctx, args.thresh, args.min_face,
-             args.stride, args.slide_window)
+             args.stride, args.slide_window, camera_path=args.camera_path)
