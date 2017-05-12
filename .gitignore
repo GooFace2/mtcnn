@@ -1,2 +1,6 @@
 *.pyc
 __pycache__
+*_annotated.*
+*.jpg
+*.png
+*.mkv
