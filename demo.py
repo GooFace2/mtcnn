@@ -15,7 +15,7 @@ from core.MtcnnDetector import MtcnnDetector
 
 def test_net(prefix, epoch, batch_size, ctx,
              thresh=[0.6, 0.6, 0.7], min_face_size=24,
-             stride=2, slide_window=False):
+             stride=2, slide_window=False, filename='test01.jpg'):
 
     detectors = [None, None, None]
 
@@ -40,25 +40,26 @@ def test_net(prefix, epoch, batch_size, ctx,
     mtcnn_detector = MtcnnDetector(detectors=detectors, ctx=ctx, min_face_size=min_face_size,
                                    stride=stride, threshold=thresh, slide_window=slide_window)
 
-    img = cv2.imread('test01.jpg')
+    img = cv2.imread(filename)
     t1 = time.time()
 
     boxes, boxes_c = mtcnn_detector.detect_pnet(img)
     boxes, boxes_c = mtcnn_detector.detect_rnet(img, boxes_c)
     boxes, boxes_c = mtcnn_detector.detect_onet(img, boxes_c)
 
-    print('time: ',time.time() - t1)
+    print('time: ', time.time() - t1)
 
     if boxes_c is not None:
         draw = img.copy()
         font = cv2.FONT_HERSHEY_SIMPLEX
         for b in boxes_c:
             cv2.rectangle(draw, (int(b[0]), int(b[1])), (int(b[2]), int(b[3])), (0, 255, 255), 1)
-            cv2.putText(draw, '%.3f'%b[4], (int(b[0]), int(b[1])), font, 0.4, (255, 255, 255), 1)
+            cv2.putText(draw, '%.3f' % b[4], (int(b[0]), int(b[1])), font, 0.4, (255, 255, 255), 1)
 
         cv2.imshow("detection result", draw)
+        f = filename.split('.')
+        cv2.imwrite(''.join([*f[:-1], "_annotated", f[-1]]), draw)
         cv2.waitKey(0)
-
 
 
 def parse_args():
@@ -79,6 +80,8 @@ def parse_args():
     parser.add_argument('--sw', dest='slide_window', help='use sliding window in pnet', action='store_true')
     parser.add_argument('--gpu', dest='gpu_id', help='GPU device to train with',
                         default=0, type=int)
+    parser.add_argument('--imagename', dest='imagename', help='Image to process',
+                        default='test01.jpg', type=str)
     args = parser.parse_args()
     return args
 
@@ -91,4 +94,4 @@ if __name__ == '__main__':
         ctx = mx.cpu(0)
     test_net(args.prefix, args.epoch, args.batch_size,
              ctx, args.thresh, args.min_face,
-             args.stride, args.slide_window)
+             args.stride, args.slide_window, args.imagename)

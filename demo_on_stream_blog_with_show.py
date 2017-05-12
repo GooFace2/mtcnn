@@ -101,7 +101,6 @@ def parse_args():
                         default=0, type=int)
     parser.add_argument('--camera-path', dest='camera_path', help='camera path pass to cv2.videoCapture',
                         default=0, type=str)
-
     args = parser.parse_args()
     return args
 
